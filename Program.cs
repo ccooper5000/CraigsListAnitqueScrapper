@@ -1,28 +1,42 @@
 ﻿using System;
 using HtmlAgilityPack;
+using System.Xml;
+using System.Threading;
+using System.Security.Cryptography.X509Certificates;
+using System.Text.RegularExpressions;
 
 namespace CraigsListAnitqueScrapper
 {
     class Program
     {
-        public static void Main(string[] args)
+        static void Main(string[] args)
         {
-            var html = "https://sanantonio.craigslist.org/search/ata";
+            Console.WriteLine("Please PASTE your URL here. Then PRESS ENTER:");
+            var inputFromUser = Console.ReadLine();
+            Console.WriteLine("DataGrab process running....");
+            Thread.Sleep(1000);
+
+           var html = inputFromUser;
 
             HtmlWeb web = new HtmlWeb();
 
-            var htmlDoc = web.Load(html); 
-            var nodes = htmlDoc.DocumentNode.SelectNodes("//li[(@class= 'result-row') ]");
-            var rootNode = htmlDoc.DocumentNode;
+            var htmlDoc = web.Load(html);
 
-            foreach (var node in nodes)
+            HtmlNodeCollection nodes = htmlDoc.DocumentNode.SelectNodes(" //a[ normalize-space (@class) = 'result-title hdrlnk' ] ");
+            HtmlNodeCollection h = htmlDoc.DocumentNode.SelectNodes(" //span[ normalize-space (@class) = 'result-price' ] ");
+
+
+            foreach (HtmlNode node in nodes)
             {
-                Console.WriteLine(node.InnerText);
+                Console.WriteLine(node.InnerText.ToUpper() + "\r\n" + node.InnerText.ToUpper());
             }
-        if (nodes == null)
+            foreach (HtmlNode node in h)
             {
-                Console.WriteLine("No items found.");
+                Console.WriteLine(node.InnerText.ToUpper());
             }
+
+            return;
+
 
         }
     }
